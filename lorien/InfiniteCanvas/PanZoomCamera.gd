@@ -32,56 +32,66 @@ func set_zoom_level(zoom_level: float) -> void:
 
 # -------------------------------------------------------------------------------------------------
 func do_center(screen_space_center_point: Vector2) -> void:
-	#var screen_space_center := get_viewport().get_size() / 2
-	
-	# TODO(gd4): no idea if this is the eqivialnt of the above line
-	var screen_space_center := Vector2(DisplayServer.window_get_size().x, DisplayServer.window_get_size().y)
-	
+	var screen_space_center := Vector2(DisplayServer.window_get_size().x, DisplayServer.window_get_size().y) * 0.5
 	var delta := screen_space_center - screen_space_center_point
-	get_viewport().warp_mouse(screen_space_center)
+	if !OS.has_feature("mobile") && OS.get_name() != "Android":
+		get_viewport().warp_mouse(screen_space_center)
 	_do_pan(delta)
 	
 	
-func touch_event(event):
-	# Keep track of the fingers on the screen
+func touch_event(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		if event.pressed:
-			_touch_events[event.index] = event
-			_multidrag_valid = false
+			_touch_events[event.index] = event.position
+			if _touch_events.size() >= 2:
+				_multidrag_valid = false
+				_pan_active = true
+				panning_toggled.emit(true)
+				zooming_toggled.emit(true)
+				get_viewport().set_input_as_handled()
 		else:
 			_touch_events.erase(event.index)
-			#_touch_last_drag_distance = 0
-		get_viewport().set_input_as_handled()
+			if _touch_events.size() < 2:
+				_multidrag_valid = false
+				if _pan_active:
+					_pan_active = false
+					panning_toggled.emit(false)
+					zooming_toggled.emit(false)
+			if _touch_events.is_empty():
+				_touch_events.clear()
 
-	if event is InputEventScreenDrag:
-		_touch_events[event.index] = event
-		# At least one fing drag
-		if _touch_events.size() == 1:
-			_do_pan(event.relative)
-		if _touch_events.size() == 2:
-			var events = []
-			for key in _touch_events.keys():
-				events.append(_touch_events.get(key))
-
-			var median_point = Vector2.ZERO
-			for e in events:
-				median_point += e.position
-			median_point /= events.size()
+	elif event is InputEventScreenDrag:
+		_touch_events[event.index] = event.position
+		
+		# Multi-touch (2+ fingers): Pan and Pinch-to-Zoom
+		if _touch_events.size() >= 2:
+			get_viewport().set_input_as_handled()
+			
+			var keys: Array = _touch_events.keys()
+			var p0: Vector2 = _touch_events[keys[0]]
+			var p1: Vector2 = _touch_events[keys[1]]
+			
+			var median_point: Vector2 = (p0 + p1) * 0.5
+			var current_distance: float = p0.distance_to(p1)
+			
 			if _multidrag_valid:
-				_do_pan(median_point - _touch_last_drag_median)
+				# Pan
+				var pan_delta: Vector2 = median_point - _touch_last_drag_median
+				_do_pan(pan_delta)
+				
+				# Pinch Zoom
+				if _touch_last_drag_distance > 5.0 and current_distance > 5.0:
+					var zoom_ratio: float = current_distance / _touch_last_drag_distance
+					var new_zoom: float = _current_zoom_level * zoom_ratio
+					var vp_size: Vector2 = Vector2(get_viewport().size)
+					var anchor: Vector2 = (median_point - vp_size * 0.5) / _current_zoom_level
+					_zoom_canvas(new_zoom, anchor + offset)
+			
 			_touch_last_drag_median = median_point
-			median_point = get_canvas_transform().affine_inverse() * median_point
-			median_point = get_global_transform().affine_inverse() * median_point
-
-			var drag_distance = events[0].position.distance_to(events[1].position)
-			var delta = (drag_distance - _touch_last_drag_distance) * _current_zoom_level / 800
-			if _multidrag_valid:
-				_zoom_canvas(_current_zoom_level + delta, median_point)
-			_touch_last_drag_distance = drag_distance
+			_touch_last_drag_distance = current_distance
 			_multidrag_valid = true
-		get_viewport().set_input_as_handled()
 
-func _input(event):
+func _input(event: InputEvent) -> void:
 	touch_event(event)
 
 # -------------------------------------------------------------------------------------------------

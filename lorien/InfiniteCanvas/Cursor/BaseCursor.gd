@@ -10,7 +10,7 @@ var _pressure := 1.0
 
 # -------------------------------------------------------------------------------------------------
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
+	if event is InputEventMouseMotion || event is InputEventMouseButton:
 		update_position()
 
 # -------------------------------------------------------------------------------------------------

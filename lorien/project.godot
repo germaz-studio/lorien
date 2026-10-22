@@ -53,9 +53,10 @@ window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/size/window_width_override=1440
 window/size/window_height_override=810
-window/subwindows/embed_subwindows=false
+window/subwindows/embed_subwindows=true
 window/stretch/aspect="expand"
 window/vsync/vsync_mode=false
+window/handheld/orientation="sensor"
 
 [editor]
 
@@ -257,10 +258,12 @@ canvas_pan_key={
 ]
 }
 
+
+
 [input_devices]
 
 pen_tablet/driver.windows="wintab"
-pointing/emulate_mouse_from_touch=false
+pointing/emulate_mouse_from_touch=true
 
 [locale]
 
@@ -281,13 +284,4 @@ renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
 
-[display]
 
-window/handheld/orientation="sensor"
-window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
-
-[input_devices]
-
-pointing/emulate_touch_from_mouse=true
-pointing/emulate_mouse_from_touch=true

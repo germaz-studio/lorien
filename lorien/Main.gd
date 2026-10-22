@@ -98,6 +98,9 @@ func _ready() -> void:
 	# Initialize scale
 	_on_scale_changed()
 	
+	if OS.has_feature("mobile") || OS.get_name() == "Android":
+		_canvas.enable()
+	
 	# Create the default project
 	_create_active_default_project()
 	
@@ -217,22 +220,24 @@ func _save_state() -> void:
 	StatePersistence.set_value(StatePersistence.ACTIVE_PROJECT, active_project_path)
 	
 	# Window related stuff
-	StatePersistence.set_value(StatePersistence.WINDOW_SIZE, get_window().size)
-	StatePersistence.set_value(StatePersistence.WINDOW_MAXIMIZED, (get_window().mode == Window.MODE_MAXIMIZED))
+	if !OS.has_feature("mobile") && OS.get_name() != "Android":
+		StatePersistence.set_value(StatePersistence.WINDOW_SIZE, get_window().size)
+		StatePersistence.set_value(StatePersistence.WINDOW_MAXIMIZED, (get_window().mode == Window.MODE_MAXIMIZED))
 
 # -------------------------------------------------------------------------------------------------
 func _apply_state() -> void:
 	# Window related stuff
-	var is_maximized: bool = StatePersistence.get_value(StatePersistence.WINDOW_MAXIMIZED, false)
-	var default_win_size := Vector2(1440, 810)
-	var win_size: Vector2 = StatePersistence.get_value(StatePersistence.WINDOW_SIZE, default_win_size)
-	
-	if is_maximized:
-		get_window().mode = Window.MODE_MAXIMIZED if (true) else Window.MODE_WINDOWED
-	else:
-		get_window().size = win_size
-		get_window().move_to_center()
-	await get_tree().create_timer(0.12).timeout
+	if !OS.has_feature("mobile") && OS.get_name() != "Android":
+		var is_maximized: bool = StatePersistence.get_value(StatePersistence.WINDOW_MAXIMIZED, false)
+		var default_win_size := Vector2(1440, 810)
+		var win_size: Vector2 = StatePersistence.get_value(StatePersistence.WINDOW_SIZE, default_win_size)
+		
+		if is_maximized:
+			get_window().mode = Window.MODE_MAXIMIZED if (true) else Window.MODE_WINDOWED
+		else:
+			get_window().size = win_size
+			get_window().move_to_center()
+		await get_tree().create_timer(0.12).timeout
 	
 	# Open projects
 	var open_projects: Array = StatePersistence.get_value(StatePersistence.OPEN_PROJECTS, Array())
@@ -518,7 +523,8 @@ func _on_InfiniteCanvas_mouse_entered() -> void:
 
 # -------------------------------------------------------------------------------------------------
 func _on_InfiniteCanvas_mouse_exited() -> void:
-	_canvas.disable()
+	if !OS.has_feature("mobile") && OS.get_name() != "Android":
+		_canvas.disable()
 
 # --------------------------------------------------------------------------------------------------
 func _on_export_confirmed(path: String) -> void:
@@ -585,10 +591,9 @@ func _on_scale_changed() -> void:
 		Types.UIScale.CUSTOM: new_scale = Settings.get_value(Settings.APPEARANCE_UI_SCALE, Config.DEFAULT_UI_SCALE)
 	new_scale = clamp(new_scale, _settings_dialog.get_min_ui_scale(), _settings_dialog.get_max_ui_scale())
 	
-	# TODO(gd4): the whole scaling stuff changed a lot in Godot 4; need to figure this out later.
-	# See: https://www.reddit.com/r/godot/comments/14h4iir/how_can_i_set_the_stretch_mode_and_aspect_in/
 	get_tree().root.content_scale_factor = new_scale
-	get_window().min_size = Config.MIN_WINDOW_SIZE * new_scale
+	if !OS.has_feature("mobile") && OS.get_name() != "Android":
+		get_window().min_size = Config.MIN_WINDOW_SIZE * new_scale
 
 # --------------------------------------------------------------------------------------------------
 func _on_constant_pressure_changed(enable: bool) -> void:
@@ -601,6 +606,12 @@ func _get_platform_ui_scale() -> float:
 	match platform:
 		"OSX":     scl = DisplayServer.screen_get_scale()
 		"Windows": scl = DisplayServer.screen_get_dpi() / 96.0
+		"Android", "iOS":
+			var dpi := DisplayServer.screen_get_dpi()
+			if dpi > 0:
+				scl = clamp(dpi / 160.0, 1.25, 2.5)
+			else:
+				scl = 1.5
 		_:         scl = _get_general_ui_scale()
 	return scl
 

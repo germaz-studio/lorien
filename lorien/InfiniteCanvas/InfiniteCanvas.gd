@@ -40,7 +40,11 @@ func _ready() -> void:
 	_brush_size = Settings.get_value(Settings.GENERAL_DEFAULT_BRUSH_SIZE, Config.DEFAULT_BRUSH_SIZE)
 	set_background_color(Settings.get_value(Settings.APPEARANCE_CANVAS_COLOR, Config.DEFAULT_CANVAS_COLOR))
 	_active_tool._on_brush_size_changed(_brush_size)
-	_active_tool.enabled = false
+	if OS.has_feature("mobile") || OS.get_name() == "Android":
+		_active_tool.enabled = true
+		_is_enabled = true
+	else:
+		_active_tool.enabled = false
 	
 	var constant_pressure: bool = Settings.get_value(
 		Settings.GENERAL_CONSTANT_PRESSURE, Config.DEFAULT_CONSTANT_PRESSURE)
@@ -186,7 +190,8 @@ func get_all_strokes() -> Array[BrushStroke]:
 
 # -------------------------------------------------------------------------------------------------
 func enable() -> void:
-	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	if !OS.has_feature("mobile") && OS.get_name() != "Android":
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	_camera.enable_input()
 	_active_tool.get_cursor().update_position()
 	_active_tool.enabled = true
@@ -194,7 +199,8 @@ func enable() -> void:
 	
 # -------------------------------------------------------------------------------------------------
 func disable() -> void:
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	if !OS.has_feature("mobile") && OS.get_name() != "Android":
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	_camera.disable_input()
 	_active_tool.enabled = false
 	_is_enabled = false
