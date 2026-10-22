@@ -413,6 +413,16 @@ func _on_open_project(filepath: String) -> bool:
 	return true
 	
 # -------------------------------------------------------------------------------------------------
+func _show_file_dialog(dialog: FileDialog) -> void:
+	var vp_size := get_viewport().get_visible_rect().size
+	var target_w := clampi(int(vp_size.x * 0.90), 600, 1400)
+	var target_h := clampi(int(vp_size.y * 0.85), 450, 1000)
+	if target_w > int(vp_size.x): target_w = int(vp_size.x) - 16
+	if target_h > int(vp_size.y): target_h = int(vp_size.y) - 16
+	dialog.size = Vector2i(target_w, target_h)
+	dialog.popup_centered()
+
+# -------------------------------------------------------------------------------------------------
 func _on_save_project_as() -> void:
 	var active_project: Project = ProjectManager.get_active_project()
 	_canvas.disable()
@@ -422,7 +432,7 @@ func _on_save_project_as() -> void:
 	_file_dialog.file_selected.connect(_on_file_selected_to_save_project)
 	_file_dialog.close_requested.connect(_on_file_dialog_closed)
 	_file_dialog.canceled.connect(_on_file_dialog_canceled)
-	_file_dialog.popup_centered()
+	_show_file_dialog(_file_dialog)
 	await file_dialog_finished
 
 # -------------------------------------------------------------------------------------------------
@@ -435,7 +445,7 @@ func _on_save_project() -> void:
 		_file_dialog.file_selected.connect(_on_file_selected_to_save_project)
 		_file_dialog.close_requested.connect(_on_file_dialog_closed)
 		_file_dialog.canceled.connect(_on_file_dialog_canceled)
-		_file_dialog.popup_centered()
+		_show_file_dialog(_file_dialog)
 	else:
 		_save_project(active_project)
 # -------------------------------------------------------------------------------------------------
@@ -545,7 +555,7 @@ func _on_export_confirmed(path: String) -> void:
 func _export_svg() -> void:
 	_export_dialog.filters = ["*.svg ; Scalable Vector graphics"]
 	_export_dialog.current_file = "lorien.svg"
-	_export_dialog.popup()
+	_show_file_dialog(_export_dialog)
 
 # --------------------------------------------------------------------------------------------------
 func _on_toggle_brush_color_picker() -> void:

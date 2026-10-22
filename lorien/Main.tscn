@@ -179,7 +179,8 @@ unresizable = true
 
 [node name="FileDialog" type="FileDialog" parent="."]
 initial_position = 2
-size = Vector2i(625, 175)
+size = Vector2i(900, 560)
+min_size = Vector2i(600, 420)
 theme = ExtResource("8")
 access = 2
 filters = PackedStringArray("*.lorien")
@@ -187,7 +188,8 @@ use_native_dialog = true
 
 [node name="ExportDialog" type="FileDialog" parent="."]
 initial_position = 2
-size = Vector2i(625, 175)
+size = Vector2i(900, 560)
+min_size = Vector2i(600, 420)
 theme = ExtResource("8")
 access = 2
 use_native_dialog = true

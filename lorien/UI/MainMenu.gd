@@ -63,8 +63,8 @@ func _on_item_pressed(id: int) -> void:
 		ITEM_SAVE_AS: save_project_as.emit()
 		ITEM_EXPORT: export_svg.emit()
 		ITEM_SETTINGS: open_settings_dialog.emit()
-		ITEM_MANUAL: open_url.emit("https://github.com/mbrlabs/lorien/blob/main/docs/manuals/manual_v0.6.0.md")
-		ITEM_BUG_TRACKER: open_url.emit("https://github.com/mbrlabs/lorien/issues")
+		ITEM_MANUAL: open_url.emit("https://github.com/germaz-studio/lorien/blob/main/docs/manuals/manual_v0.6.0.md")
+		ITEM_BUG_TRACKER: open_url.emit("https://github.com/germaz-studio/lorien/issues")
 		ITEM_ABOUT: open_about_dialog.emit()
 		ITEM_QUIT: quit.emit()
 
@@ -75,6 +75,12 @@ func _on_open_project() -> void:
 	file_dialog.file_selected.connect(_on_project_selected_to_open)
 	file_dialog.close_requested.connect(_on_file_dialog_closed)
 	file_dialog.invalidate()
+	var vp_size := get_viewport().get_visible_rect().size
+	var target_w := clampi(int(vp_size.x * 0.90), 600, 1400)
+	var target_h := clampi(int(vp_size.y * 0.85), 450, 1000)
+	if target_w > int(vp_size.x): target_w = int(vp_size.x) - 16
+	if target_h > int(vp_size.y): target_h = int(vp_size.y) - 16
+	file_dialog.size = Vector2i(target_w, target_h)
 	file_dialog.popup_centered()
 
 # -------------------------------------------------------------------------------------------------

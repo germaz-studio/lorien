@@ -120,6 +120,12 @@ func _on_open_project_pressed() -> void:
 	file_dialog.file_selected.connect(_on_project_selected_to_open)
 	file_dialog.close_requested.connect(_on_file_dialog_closed)
 	file_dialog.invalidate()
+	var vp_size := get_viewport().get_visible_rect().size
+	var target_w := clampi(int(vp_size.x * 0.90), 600, 1400)
+	var target_h := clampi(int(vp_size.y * 0.85), 450, 1000)
+	if target_w > int(vp_size.x): target_w = int(vp_size.x) - 16
+	if target_h > int(vp_size.y): target_h = int(vp_size.y) - 16
+	file_dialog.size = Vector2i(target_w, target_h)
 	file_dialog.popup_centered()
 
 # -------------------------------------------------------------------------------------------------
