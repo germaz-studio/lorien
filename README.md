@@ -49,3 +49,15 @@ If you want to check out the bleeding edge main branch without building the proj
 - Brush stroke antialiasing: [godot-antialiased-line2d](https://github.com/godot-extended-libraries/godot-antialiased-line2d)
 - Icons used for the UI: [Remix Icon](https://remixicon.com/)
 - Blurred background image of demo screenshot: https://unsplash.com/photos/nO0V_T0g2fM
+
+---
+
+## Android Port & Credits
+
+This repository contains the Android mobile port of **Lorien**, ported and maintained by Oskar Gerlicz-Kowalczuk ([germaz studio](https://github.com/germaz-studio)).
+
+- **Original Project & Desktop Version:** [mbrlabs/Lorien](https://github.com/mbrlabs/Lorien) by Mathieu Bourgnon.
+- **Port Features:** Touchscreen canvas navigation, pinch-to-zoom, responsive DPI UI scaling, and offline infinite canvas drawing.
+
+### Trademark & Branding Notice
+The names "germaz", "germaz studio", and associated logos are proprietary marks of Oskar Gerlicz-Kowalczuk / Germaz Studio. The MIT license governing the code does not grant rights to use these brand assets or trademarks.

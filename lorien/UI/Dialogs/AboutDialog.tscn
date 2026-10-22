@@ -111,3 +111,8 @@ unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 2
 text = "Remix Icon"
+
+[node name="GermazStudioLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Android port by germaz studio"
+horizontal_alignment = 1
