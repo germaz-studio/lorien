@@ -59,5 +59,9 @@ This repository contains the Android mobile port of **Lorien**, ported and maint
 - **Original Project & Desktop Version:** [mbrlabs/Lorien](https://github.com/mbrlabs/Lorien) by Mathieu Bourgnon.
 - **Port Features:** Touchscreen canvas navigation, pinch-to-zoom, responsive DPI UI scaling, and offline infinite canvas drawing.
 
+### License
+
+This mobile port is licensed under the [GNU General Public License v3.0](LICENSE) (GPLv3), with original desktop contributions by Marcus Brummer / mbrlabs preserved under the MIT License.
+
 ### Trademark & Branding Notice
-The names "germaz", "germaz studio", and associated logos are proprietary marks of Oskar Gerlicz-Kowalczuk / Germaz Studio. The MIT license governing the code does not grant rights to use these brand assets or trademarks.
+The names "germaz", "germaz studio", and associated logos are proprietary marks of Oskar Gerlicz-Kowalczuk / Germaz Studio. The open-source license governing the code does not grant rights to use these brand assets or trademarks.

@@ -100,7 +100,7 @@ SETTINGS_TOOL_PRESSURE                  Presión de las herramientas predetermin
 # -----------------------------------------------------------------------------
 
 ABOUT_DIALOG_TITLE              Acerca de
-ABOUT_DIALOG_COPYRIGHT          © 2021-2024 Marcus Brummer & colaboradores 
+ABOUT_DIALOG_COPYRIGHT          © 2021-2026 Marcus Brummer & colaboradores 
 ABOUT_DIALOG_LICSENSE           Lorien está licenciado bajo:
 ABOUT_DIALOG_BASED_ON           Lorien está basado en:
 ABOUT_DIALOG_EASTEREGG          Personaje secreto:
