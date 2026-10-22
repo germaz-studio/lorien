@@ -1,0 +1,14 @@
+Lorien is an open-source infinite canvas drawing and digital note-taking application, ported to Android by Oskar Gerlicz-Kowalczuk (Germaz Studio).
+
+Features:
+* Infinite canvas with smooth pinch-to-zoom and pan navigation
+* Single-finger drawing with customizable brush sizes and color palettes
+* Vector-based stroke rendering for crisp visuals at any zoom level
+* SVG export functionality
+* Clean, distraction-free interface optimized for mobile and tablet touchscreens
+* 100% Free and Open Source (GNU GPLv3)
+* Completely offline, zero telemetry, zero trackers, zero permissions required
+
+Credits:
+* Original desktop application created by Marcus Brummer (mbrlabs)
+* Android port, touch controls, and mobile adaptations by Oskar Gerlicz-Kowalczuk (Germaz Studio)
