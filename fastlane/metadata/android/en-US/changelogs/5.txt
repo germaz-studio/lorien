@@ -1,0 +1,3 @@
+- Improved tablet and stylus display scaling: added dynamic aspect ratio correction.
+- Native vector UI rendering with canvas_items stretch mode to prevent squeezed text.
+- Cleaned up export presets and keystore definitions.

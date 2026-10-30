@@ -618,10 +618,20 @@ func _get_platform_ui_scale() -> float:
 		"Windows": scl = DisplayServer.screen_get_dpi() / 96.0
 		"Android", "iOS":
 			var dpi := DisplayServer.screen_get_dpi()
+			var screen_size := DisplayServer.screen_get_size()
+			var min_dim: float = min(screen_size.x, screen_size.y)
 			if dpi > 0:
-				scl = clamp(dpi / 160.0, 1.25, 2.5)
+				scl = dpi / 160.0
+				# On graphics tablets / large mobile screens, scale proportionally without over-inflating UI
+				if min_dim >= 1200:
+					scl = clamp(scl * 0.9, 1.25, 2.2)
+				else:
+					scl = clamp(scl, 1.1, 2.0)
 			else:
-				scl = 1.5
+				if min_dim >= 1200:
+					scl = 1.75
+				else:
+					scl = 1.35
 		_:         scl = _get_general_ui_scale()
 	return scl
 
