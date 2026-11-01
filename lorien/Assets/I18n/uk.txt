@@ -169,3 +169,9 @@ KEYBINDING_DIALOG_BIND_ACTION          Дія: {action}
 # Rebind already bound key dialog
 KEYBINDING_DIALOG_REBIND_WINDOW_NAME   Змінити клавішу?
 KEYBINDING_DIALOG_REBIND_MESSAGE       '{event}' вже прив'язана до {action}.\n\nДійсно хочете змінити клавішу?
+
+SETTINGS_PALM_REJECTION                  Palm Rejection
+SETTINGS_PALM_REJECTION_SIDE             Resting Side
+SETTINGS_PALM_REJECTION_SIDE_RIGHT       Right (Right-handed)
+SETTINGS_PALM_REJECTION_SIDE_LEFT        Left (Left-handed)
+SETTINGS_PALM_REJECTION_WIDTH            Resting Zone Width

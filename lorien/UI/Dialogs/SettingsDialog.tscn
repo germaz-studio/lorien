@@ -210,6 +210,61 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="HSeparatorPalm" type="HSeparator" parent="VBoxContainer/MarginContainer/VBoxContainer/GeneralContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="PalmRejection" type="HBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/GeneralContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/GeneralContainer/VBoxContainer/PalmRejection"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "SETTINGS_PALM_REJECTION"
+
+[node name="PalmRejectionEnabled" type="CheckBox" parent="VBoxContainer/MarginContainer/VBoxContainer/GeneralContainer/VBoxContainer/PalmRejection"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PalmRejectionSideRow" type="HBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/GeneralContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/GeneralContainer/VBoxContainer/PalmRejectionSideRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "SETTINGS_PALM_REJECTION_SIDE"
+
+[node name="PalmRejectionSide" type="OptionButton" parent="VBoxContainer/MarginContainer/VBoxContainer/GeneralContainer/VBoxContainer/PalmRejectionSideRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PalmRejectionWidthRow" type="HBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/GeneralContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/GeneralContainer/VBoxContainer/PalmRejectionWidthRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "SETTINGS_PALM_REJECTION_WIDTH"
+
+[node name="PalmRejectionWidth" type="SpinBox" parent="VBoxContainer/MarginContainer/VBoxContainer/GeneralContainer/VBoxContainer/PalmRejectionWidthRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = 5.0
+max_value = 50.0
+step = 1.0
+value = 25.0
+suffix = "%"
+
 [node name="AppearanceContainer" type="ScrollContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false

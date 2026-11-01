@@ -92,6 +92,7 @@ func _ready() -> void:
 	_settings_dialog.grid_pattern_changed.connect(_on_grid_pattern_changed)
 	_settings_dialog.canvas_color_changed.connect(_on_canvas_color_changed)
 	_settings_dialog.constant_pressure_changed.connect(_on_constant_pressure_changed)
+	_settings_dialog.palm_rejection_changed.connect(_canvas.update_palm_rejection)
 	
 	Settings.changed_theme.connect(_on_theme_changed)
 	

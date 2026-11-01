@@ -2,7 +2,7 @@ class_name Config
 
 const VERSION_MAJOR					:= 0
 const VERSION_MINOR					:= 7
-const VERSION_PATCH					:= 4
+const VERSION_PATCH					:= 5
 const VERSION_STATUS				:= "-beta1"
 static var VERSION_STRING			:= "%d.%d.%d%s" % [VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_STATUS]
 const CONFIG_PATH 					:= "user://settings_v4.cfg"
@@ -28,3 +28,6 @@ const DEFAULT_UI_SCALE  			:= 1.0
 const DEFAULT_GRID_PATTERN 			:= Types.GridPattern.DOTS
 const DEFAULT_GRID_SIZE 			:= 25.0
 const DEFAULT_APPEARANCE_THEME		:= 0
+const DEFAULT_PALM_REJECTION_ENABLED	:= false
+const DEFAULT_PALM_REJECTION_SIDE		:= Types.PalmRejectionSide.RIGHT
+const DEFAULT_PALM_REJECTION_WIDTH		:= 25.0

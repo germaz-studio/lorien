@@ -33,6 +33,10 @@ var _use_optimizer := true
 var _optimizer: BrushStrokeOptimizer
 var _player: Player = null
 var _player_enabled := false
+var _palm_overlay: Control = null
+var _palm_color_rect: ColorRect = null
+var _palm_border_line: ColorRect = null
+var _palm_label: Label = null
 
 # -------------------------------------------------------------------------------------------------
 func _ready() -> void:
@@ -70,6 +74,104 @@ func _ready() -> void:
 
 	info.pen_inverted = false
 
+	_setup_palm_overlay()
+	update_palm_rejection()
+	resized.connect(update_palm_rejection)
+	Settings.palm_rejection_changed.connect(update_palm_rejection)
+
+# -------------------------------------------------------------------------------------------------
+func _setup_palm_overlay() -> void:
+	_palm_overlay = Control.new()
+	_palm_overlay.name = "PalmRejectionOverlay"
+	_palm_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_palm_overlay.visible = false
+	
+	_palm_color_rect = ColorRect.new()
+	_palm_color_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_palm_color_rect.color = Color(0.0, 0.0, 0.0, 0.12)
+	_palm_overlay.add_child(_palm_color_rect)
+	
+	_palm_border_line = ColorRect.new()
+	_palm_border_line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_palm_border_line.color = Color(0.31, 1.0, 0.84, 0.4)
+	_palm_overlay.add_child(_palm_border_line)
+	
+	_palm_label = Label.new()
+	_palm_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_palm_label.text = "PALM REST"
+	_palm_label.modulate = Color(1.0, 1.0, 1.0, 0.35)
+	_palm_overlay.add_child(_palm_label)
+	
+	add_child(_palm_overlay)
+
+# -------------------------------------------------------------------------------------------------
+func update_palm_rejection() -> void:
+	if _palm_overlay == null:
+		return
+		
+	var enabled: bool = Settings.get_value(Settings.GENERAL_PALM_REJECTION_ENABLED, Config.DEFAULT_PALM_REJECTION_ENABLED)
+	if !enabled:
+		_palm_overlay.visible = false
+		return
+		
+	_palm_overlay.visible = true
+	var vp_size: Vector2 = size
+	if vp_size.x <= 0 or vp_size.y <= 0:
+		vp_size = get_viewport_rect().size
+		
+	var topbar_height: float = 78.0
+	var statusbar_height: float = 24.0
+	var available_height: float = max(vp_size.y - topbar_height - statusbar_height, 10.0)
+	
+	var width_pct: float = Settings.get_value(Settings.GENERAL_PALM_REJECTION_WIDTH, Config.DEFAULT_PALM_REJECTION_WIDTH)
+	var side: int = Settings.get_value(Settings.GENERAL_PALM_REJECTION_SIDE, Config.DEFAULT_PALM_REJECTION_SIDE)
+	var zone_width: float = vp_size.x * (clamp(width_pct, 5.0, 50.0) / 100.0)
+	
+	if side == Types.PalmRejectionSide.RIGHT:
+		var zone_x: float = vp_size.x - zone_width
+		_palm_color_rect.position = Vector2(zone_x, topbar_height)
+		_palm_color_rect.size = Vector2(zone_width, available_height)
+		
+		_palm_border_line.position = Vector2(zone_x, topbar_height)
+		_palm_border_line.size = Vector2(2.0, available_height)
+		
+		_palm_label.position = Vector2(zone_x + 12.0, vp_size.y - statusbar_height - 30.0)
+	else: # LEFT
+		_palm_color_rect.position = Vector2(0.0, topbar_height)
+		_palm_color_rect.size = Vector2(zone_width, available_height)
+		
+		_palm_border_line.position = Vector2(zone_width - 2.0, topbar_height)
+		_palm_border_line.size = Vector2(2.0, available_height)
+		
+		_palm_label.position = Vector2(zone_width - 90.0, vp_size.y - statusbar_height - 30.0)
+
+# -------------------------------------------------------------------------------------------------
+func is_in_palm_rejection_zone(screen_pos: Vector2) -> bool:
+	var enabled: bool = Settings.get_value(Settings.GENERAL_PALM_REJECTION_ENABLED, Config.DEFAULT_PALM_REJECTION_ENABLED)
+	if !enabled:
+		return false
+		
+	# NEVER block the top bar (y < 78px) where menu, toolbar, settings are located!
+	# NEVER block the status bar (y > height - 24px)
+	var vp_size: Vector2 = size
+	if vp_size.x <= 0 or vp_size.y <= 0:
+		vp_size = get_viewport_rect().size
+		
+	var topbar_height: float = 78.0
+	if screen_pos.y < topbar_height:
+		return false
+	if screen_pos.y > (vp_size.y - 24.0):
+		return false
+		
+	var width_pct: float = Settings.get_value(Settings.GENERAL_PALM_REJECTION_WIDTH, Config.DEFAULT_PALM_REJECTION_WIDTH)
+	var side: int = Settings.get_value(Settings.GENERAL_PALM_REJECTION_SIDE, Config.DEFAULT_PALM_REJECTION_SIDE)
+	var zone_width: float = vp_size.x * (clamp(width_pct, 5.0, 50.0) / 100.0)
+	
+	if side == Types.PalmRejectionSide.RIGHT:
+		return screen_pos.x >= (vp_size.x - zone_width)
+	else:
+		return screen_pos.x <= zone_width
+
 # -------------------------------------------------------------------------------------------------
 func _unhandled_key_input(event: InputEvent) -> void:
 	_process_event(event)
@@ -80,6 +182,20 @@ func _gui_input(event: InputEvent) -> void:
 
 # -------------------------------------------------------------------------------------------------
 func _process_event(event: InputEvent) -> void:
+	# Palm rejection filter
+	if event is InputEventMouseButton:
+		if event.pressed and is_in_palm_rejection_zone(event.position):
+			return
+	elif event is InputEventMouseMotion:
+		if !_active_tool.performing_stroke and is_in_palm_rejection_zone(event.position):
+			return
+	elif event is InputEventScreenTouch:
+		if event.pressed and is_in_palm_rejection_zone(event.position):
+			return
+	elif event is InputEventScreenDrag:
+		if is_in_palm_rejection_zone(event.position):
+			return
+
 	if event is InputEventMouseMotion:
 		info.current_pressure = event.pressure
 		if info.pen_inverted != event.pen_inverted:

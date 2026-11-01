@@ -13,6 +13,9 @@ const GENERAL_DEFAULT_PROJECT_DIR		:= "general_default_project_dir"
 const GENERAL_LANGUAGE					:= "general_language"
 const GENERAL_TOOL_PRESSURE				:= "general_tool_pressure"
 const GENERAL_TABLET_DRIVER 			:= "general_tablet_driver"
+const GENERAL_PALM_REJECTION_ENABLED	:= "general_palm_rejection_enabled"
+const GENERAL_PALM_REJECTION_SIDE		:= "general_palm_rejection_side"
+const GENERAL_PALM_REJECTION_WIDTH		:= "general_palm_rejection_width"
 const COLOR_PALETTE_UUID_LAST_USED		:= "general_color_palette_uuid_last_used" # TODO: move this to state.cfg
 
 # -------------------------------------------------------------------------------------------------
@@ -36,6 +39,7 @@ var language_names: PackedStringArray
 
 #--------------------------------------------------------------------------------------------------
 signal changed_theme(path: String)
+signal palm_rejection_changed
 
 # -------------------------------------------------------------------------------------------------
 func _ready() -> void:

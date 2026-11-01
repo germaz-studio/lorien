@@ -1,0 +1,7 @@
+- Added Palm Rejection (Touch Exclusion Zone) in Settings:
+  - Toggle palm rejection on/off.
+  - Choose resting side: Right (Right-handed) or Left (Left-handed).
+  - Customizable exclusion width percentage (5% - 50%).
+  - Topbar and UI menus remain always accessible and interactive.
+  - Visual resting zone indicator on the canvas.
+- Dynamic tablet and stylus display scaling with canvas_items stretch mode.

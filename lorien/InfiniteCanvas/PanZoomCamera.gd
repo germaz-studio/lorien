@@ -39,9 +39,26 @@ func do_center(screen_space_center_point: Vector2) -> void:
 	_do_pan(delta)
 	
 	
+func is_in_palm_rejection_zone(screen_pos: Vector2) -> bool:
+	var enabled: bool = Settings.get_value(Settings.GENERAL_PALM_REJECTION_ENABLED, Config.DEFAULT_PALM_REJECTION_ENABLED)
+	if !enabled:
+		return false
+	var vp_size: Vector2 = get_viewport_rect().size
+	if screen_pos.y < 78.0 or screen_pos.y > (vp_size.y - 24.0):
+		return false
+	var width_pct: float = Settings.get_value(Settings.GENERAL_PALM_REJECTION_WIDTH, Config.DEFAULT_PALM_REJECTION_WIDTH)
+	var side: int = Settings.get_value(Settings.GENERAL_PALM_REJECTION_SIDE, Config.DEFAULT_PALM_REJECTION_SIDE)
+	var zone_width: float = vp_size.x * (clamp(width_pct, 5.0, 50.0) / 100.0)
+	if side == Types.PalmRejectionSide.RIGHT:
+		return screen_pos.x >= (vp_size.x - zone_width)
+	else:
+		return screen_pos.x <= zone_width
+
 func touch_event(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		if event.pressed:
+			if is_in_palm_rejection_zone(event.position):
+				return
 			_touch_events[event.index] = event.position
 			if _touch_events.size() >= 2:
 				_multidrag_valid = false
@@ -61,6 +78,10 @@ func touch_event(event: InputEvent) -> void:
 				_touch_events.clear()
 
 	elif event is InputEventScreenDrag:
+		if !_touch_events.has(event.index):
+			return
+		if is_in_palm_rejection_zone(event.position):
+			return
 		_touch_events[event.index] = event.position
 		
 		# Multi-touch (2+ fingers): Pan and Pinch-to-Zoom

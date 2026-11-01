@@ -126,3 +126,9 @@ SAVE            儲存
 DISCARD         放棄
 CANCEL          取消
 DELETE          删除
+
+SETTINGS_PALM_REJECTION                  Palm Rejection
+SETTINGS_PALM_REJECTION_SIDE             Resting Side
+SETTINGS_PALM_REJECTION_SIDE_RIGHT       Right (Right-handed)
+SETTINGS_PALM_REJECTION_SIDE_LEFT        Left (Left-handed)
+SETTINGS_PALM_REJECTION_WIDTH            Resting Zone Width

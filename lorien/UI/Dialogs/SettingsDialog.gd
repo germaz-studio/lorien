@@ -24,6 +24,7 @@ signal canvas_color_changed(color: Color)
 signal grid_size_changed(size: int)
 signal grid_pattern_changed(pattern: Types.GridPattern)
 signal constant_pressure_changed(state: bool)
+signal palm_rejection_changed
 
 
 # -------------------------------------------------------------------------------------------------
@@ -44,6 +45,9 @@ signal constant_pressure_changed(state: bool)
 @onready var _project_dir: LineEdit = %DefaultProjectDir
 @onready var _language: OptionButton = %Language
 @onready var _tablet_driver: OptionButton = %TabletDriver
+@onready var _palm_rejection_enabled: CheckBox = %PalmRejectionEnabled
+@onready var _palm_rejection_side: OptionButton = %PalmRejectionSide
+@onready var _palm_rejection_width: SpinBox = %PalmRejectionWidth
 @onready var _theme: OptionButton = %Theme
 @onready var _canvas_color: ColorPickerButton= %CanvasColor
 @onready var _ui_scale_mode: OptionButton = %UIScaleOptions
@@ -70,6 +74,9 @@ func _ready() -> void:
 	_project_dir.text_changed.connect(_on_default_project_dir_changed)
 	_language.item_selected.connect(_on_language_selected)
 	_tablet_driver.item_selected.connect(_on_tablet_driver_selected)
+	_palm_rejection_enabled.toggled.connect(_on_palm_rejection_enabled_toggled)
+	_palm_rejection_side.item_selected.connect(_on_palm_rejection_side_selected)
+	_palm_rejection_width.value_changed.connect(_on_palm_rejection_width_changed)
 	_theme.item_selected.connect(_on_theme_selected)
 	_ui_scale_mode.item_selected.connect(_on_ui_scale_mode_selected)
 	_ui_scale.value_changed.connect(_on_ui_scale_changed)
@@ -123,6 +130,20 @@ func _set_values() -> void:
 	_set_rounding()
 	_set_keybindings()
 	_set_ui_scale_range()
+	
+	_palm_rejection_side.clear()
+	_palm_rejection_side.add_item(tr("SETTINGS_PALM_REJECTION_SIDE_RIGHT"), Types.PalmRejectionSide.RIGHT)
+	_palm_rejection_side.add_item(tr("SETTINGS_PALM_REJECTION_SIDE_LEFT"), Types.PalmRejectionSide.LEFT)
+	
+	var palm_enabled: bool = Settings.get_value(Settings.GENERAL_PALM_REJECTION_ENABLED, Config.DEFAULT_PALM_REJECTION_ENABLED)
+	var palm_side: int = Settings.get_value(Settings.GENERAL_PALM_REJECTION_SIDE, Config.DEFAULT_PALM_REJECTION_SIDE)
+	var palm_width: float = Settings.get_value(Settings.GENERAL_PALM_REJECTION_WIDTH, Config.DEFAULT_PALM_REJECTION_WIDTH)
+	
+	_palm_rejection_enabled.button_pressed = palm_enabled
+	_palm_rejection_side.selected = palm_side
+	_palm_rejection_width.value = palm_width
+	_palm_rejection_side.disabled = !palm_enabled
+	_palm_rejection_width.editable = palm_enabled
 	
 	_constant_pressure.button_pressed = constant_pressure
 	_pressure_sensitivity.value = pressure_sensitivity
@@ -336,3 +357,23 @@ func _on_action_keybinding_changed(action: KeybindingsManager.Action, event: Inp
 	KeybindingsManager.rebind_action(action, event)
 	Settings.set_keybinding(action.name, action.event)
 	GlobalSignals.keybinding_changed.emit(action)
+
+# -------------------------------------------------------------------------------------------------
+func _on_palm_rejection_enabled_toggled(button_pressed: bool) -> void:
+	Settings.set_value(Settings.GENERAL_PALM_REJECTION_ENABLED, button_pressed)
+	_palm_rejection_side.disabled = !button_pressed
+	_palm_rejection_width.editable = button_pressed
+	palm_rejection_changed.emit()
+	Settings.palm_rejection_changed.emit()
+
+# -------------------------------------------------------------------------------------------------
+func _on_palm_rejection_side_selected(idx: int) -> void:
+	Settings.set_value(Settings.GENERAL_PALM_REJECTION_SIDE, idx)
+	palm_rejection_changed.emit()
+	Settings.palm_rejection_changed.emit()
+
+# -------------------------------------------------------------------------------------------------
+func _on_palm_rejection_width_changed(value: float) -> void:
+	Settings.set_value(Settings.GENERAL_PALM_REJECTION_WIDTH, value)
+	palm_rejection_changed.emit()
+	Settings.palm_rejection_changed.emit()

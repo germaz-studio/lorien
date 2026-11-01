@@ -75,6 +75,11 @@ SETTINGS_PROJECT_FOLDER_PLACEHOLDER     e.g. C:/Users/me/Lorien
 SETTINGS_GRID_SIZE                      Grid Size
 SETTINGS_LANGUAGE                       Language
 SETTINGS_TABLET_DRIVER                  Tablet Driver
+SETTINGS_PALM_REJECTION                  Palm Rejection
+SETTINGS_PALM_REJECTION_SIDE             Resting Side
+SETTINGS_PALM_REJECTION_SIDE_RIGHT       Right (Right-handed)
+SETTINGS_PALM_REJECTION_SIDE_LEFT        Left (Left-handed)
+SETTINGS_PALM_REJECTION_WIDTH            Resting Zone Width
 SETTINGS_THEME                          Theme
 SETTINGS_THEME_DARK                     Dark Mode
 SETTINGS_THEME_LIGHT                    Light Mode
